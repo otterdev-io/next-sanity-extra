@@ -1,13 +1,13 @@
 {
   "name": "@otterdev/next-sanity-extra",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A module to make integration between next js and sanity, with live preview, easier",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc"
   },
-  "keywords": [],
+  "keywords": ["next", "nextjs", "sanity", "next-sanity"],
   "author": "Chris Fraser",
   "license": "ISC",
   "devDependencies": {

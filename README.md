@@ -45,7 +45,10 @@ export const {
 To use in a page, eg `pages/index.tsx`:
 
 ```tsx
-import { SanityStaticProps, SanityProps, useSanityPreview } from '@otterdev/next-sanity-extra'
+import { sanityStaticProps, useSanityPreview } from "../lib/sanity";
+// Don't need these type imports in js
+import { GetStaticPropsContext } from "next";
+import { SanityProps, SanityStaticProps } from "@otterdev/next-sanity-extra";
 
 const query = groq`*[ etc... ]`;
 
