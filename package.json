@@ -1,6 +1,6 @@
 {
   "name": "@otterdev/next-sanity-extra",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "A module to make integration between next js and sanity, with live preview, easier",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

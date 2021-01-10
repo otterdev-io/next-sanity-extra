@@ -10,7 +10,7 @@ This package provides functions, hooks and types to simplify and reduce the boil
 - `sanityStaticProps(query, context, staticProps)` - Returns static props for getStaticProps.
   - `query` - the query to run for the page.
   - `context` - the context passed into getStaticProps
-  - `staticProps` - the value to return. `props` key should have `data`, containing result from sanity query.
+  - `staticProps` - [optional] extra settings to pass to getStaticProps. If it contains `props`, it will be merged with the sanity data.
 - `useSanityPreview(query, props)` - A hook which returns preview-enabled data for use in each page.
   - `query` - the query to run for the page
   - `props` - props passed into the page component
@@ -55,11 +55,7 @@ const query = groq`*[ etc... ]`;
 export const getStaticProps = async (
   context: GetStaticPropsContext
 ): Promise<SanityStaticProps> =>
-  sanityStaticProps(query, context, {
-    //extra props are optional
-    props: { name: "index" },
-    revalidate: 60,
-  });
+  sanityStaticProps(query, context, { revalidate: 60 });
 
 // Optionally type your page's data: 
 // SanityProps<{title: string, etc...}>
