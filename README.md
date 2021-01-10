@@ -16,8 +16,11 @@ This package provides functions, hooks and types to simplify and reduce the boil
   - `props` - props passed into the page component
 
 ### API Funcions
-- `previewApi` - API handler to call from sanity for page previews
-
+- `previewApi({token, data, redirect})` - API handler to call from sanity for page previews
+  - `token` - Sanity API Token
+  - `data` - [optional] Function from request to preview data to return to client
+  - `redirect` - [optional] Function from request to a path to redirect to. Defaults to `/${req.query.slug}`
+  
 ## Setup
 First to setup the functions, create a module, eg `lib/sanity.ts`. Call `setupNextSanity(config)` to get the helper functions:
 
@@ -74,5 +77,5 @@ To serve live previews, create eg `pages/api/preview.ts`:
 ```ts
 import previewApi from '@otterdev/next-sanity-extra/api/preview'
 
-export default previewApi(process.env.SANITY_PREVIEW_TOKEN!) 
+export default previewApi({token: process.env.SANITY_PREVIEW_TOKEN!}) 
 ```
