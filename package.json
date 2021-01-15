@@ -1,6 +1,6 @@
 {
   "name": "@otterdev/next-sanity-extra",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "A module to make integration between next js and sanity, with live preview, easier",
   "main": "index.js",
   "types": "index.d.ts",
@@ -8,8 +8,14 @@
     "build": "tsc",
     "realpublish": "npm run build && cp package.json dist && cp README.md dist && cd dist && npm publish"
   },
-  "keywords": ["next", "nextjs", "sanity", "next-sanity"],
+  "keywords": [
+    "next",
+    "nextjs",
+    "sanity",
+    "next-sanity"
+  ],
   "author": "Chris Fraser",
+  "homepage": "https://github.com/otterdev-io/next-sanity-extra",
   "license": "ISC",
   "devDependencies": {
     "@types/node": "^14.14.20",
@@ -19,5 +25,9 @@
   "dependencies": {
     "next": "^10.0.5",
     "next-sanity": "^0.1.8"
+  },
+  "peerDependencies": {
+    "react": "^17.0.0",
+    "react-dom": "^17.0.0"
   }
 }

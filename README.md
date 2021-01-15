@@ -1,10 +1,16 @@
 # next-sanity-extra
-This package provides functions, hooks and types to simplify and reduce the boilerplate when integrating Next.js as a SSG, with Sanity.io CMS, with live previews, as per  https://www.sanity.io/blog/live-preview-with-nextjs
+This package aims to simplify integrating Next.js, and the Sanity.io CMS.
+It gives you simple functions for setting up sanity, fetching static props, and using live previews as per  https://www.sanity.io/blog/live-preview-with-nextjs
 
 ## Functions
-`setupNextSanity(client: ClientConfig)` - Returns an object with functions you can use to ease integration:
 
-### Client Functions
+```js
+import { setupNextSanity } from "@otterdev/next-sanity-extra"
+```
+`setupNextSanity(client: ClientConfig)` 
+
+Returns an object with functions you can use to ease integration:
+
 - `getClient(preview)` - A Sanity client that uses preview data or not
 - `imageUrlBuilder` - A ImageUrlBuilder
 - `sanityStaticProps(query, context, staticProps)` - Returns static props for getStaticProps.
@@ -16,7 +22,10 @@ This package provides functions, hooks and types to simplify and reduce the boil
   - `props` - props passed into the page component
 
 ### API Funcions
-- `previewApi({token, data, redirect})` - API handler to call from sanity for page previews
+```js
+import previewApi from "@otterdev/next-sanity-extra/api/preview"
+```
+`previewApi({token, data, redirect})` - API handler to call from sanity for page previews:
   - `token` - Sanity API Token
   - `data` - [optional] Function from request to preview data to return to client
   - `redirect` - [optional] Function from request to a path to redirect to. Defaults to `/${req.query.slug}`
