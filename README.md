@@ -31,16 +31,16 @@ import previewApi from "@otterdev/next-sanity-extra/api/preview"
   - `redirect` - [optional] Function from request to a path to redirect to. Defaults to `/${req.query.slug}`
   
 ## Setup
-First to setup the functions, create a module, eg `lib/sanity.ts`. Call `setupNextSanity(config)` to get the helper functions:
+First to setup the functions, create a module, eg `lib/sanity.js`. Call `setupNextSanity(config)` to get the helper functions:
 
-```ts
+```js
 import { setupNextSanity } from "@otterdev/next-sanity-extra"
 
 // Standard sanity config
 // Don't forget token for live previews
 const config = {
-  projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID!,
-  dataset: process.env.NEXT_PUBLIC_SANITY_DATASET!,
+  projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,
+  dataset: process.env.NEXT_PUBLIC_SANITY_DATASET,
   useCdn: process.env.NODE_ENV === "production",
   token: process.env.SANITY_API_TOKEN
 };
@@ -54,19 +54,38 @@ export const {
 ```
 
 ## Usage
-To use in a page, eg `pages/index.tsx`:
+To use in a page, 
 
+### Javascript
+eg `pages/index.jsx`:
 ```tsx
 import { sanityStaticProps, useSanityPreview } from "../lib/sanity";
-// Don't need these type imports in js
-import { GetStaticPropsContext } from "next";
-import { SanityProps, SanityStaticProps } from "@otterdev/next-sanity-extra";
+import groq from "groq";
 
 const query = groq`*[ etc... ]`;
 
-export const getStaticProps = async (
-  context: GetStaticPropsContext
-): Promise<SanityStaticProps> =>
+export const getStaticProps = (context) =>
+  sanityStaticProps(query, context, { revalidate: 60 });
+
+export default function ServicesPage(props) {
+  const { data, loading, error } = useSanityPreview(query, props);
+
+  // Render page with data
+  <h1>{data.title}</h1>
+}
+```
+
+### Typescript
+eg `pages/index.tsx`:
+```tsx
+import { sanityStaticProps, useSanityPreview } from "../lib/sanity";
+import groq from "groq";
+import { GetStaticPropsContext } from "next";
+import { SanityProps } from "@otterdev/next-sanity-extra";
+
+const query = groq`*[ etc... ]`;
+
+export const getStaticProps = async (context: GetStaticPropsContext) =>
   sanityStaticProps(query, context, { revalidate: 60 });
 
 // Optionally type your page's data: 
@@ -81,10 +100,22 @@ export default function ServicesPage(props: SanityProps) {
 ```
 
 ## Preview API request
-To serve live previews, create eg `pages/api/preview.ts`:
+To serve live previews, create eg `pages/api/preview.js`.
 
-```ts
+With the default settings - forwarding to /[slug]:
+
+```js
 import previewApi from '@otterdev/next-sanity-extra/api/preview'
 
-export default previewApi({token: process.env.SANITY_PREVIEW_TOKEN!}) 
+export default previewApi({token: process.env.SANITY_PREVIEW_TOKEN}) 
+```
+
+to forward to custom parameter - eg 'page'
+```js
+import previewApi from '@otterdev/next-sanity-extra/api/preview'
+
+export default previewApi({
+  token: process.env.SANITY_PREVIEW_TOKEN,
+  redirect: (req) => `/${req.query.page}`
+});
 ```
