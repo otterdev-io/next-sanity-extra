@@ -26,7 +26,8 @@ export interface NextSanity {
   imageUrlBuilder: ImageUrlBuilder;
   sanityStaticProps: <T, Q extends ParsedUrlQuery>(
     query: string,
-    context: GetStaticPropsContext<Q>
+    context: GetStaticPropsContext<Q>,
+    params?: Q 
   ) => Promise<SanityProps<T, Q>>;
   useSanityQuery: <T, Q extends ParsedUrlQuery>(
     query: string,
@@ -53,23 +54,23 @@ export function setupNextSanity(config: ClientConfig): NextSanity {
   async function sanityStaticProps<T extends any, Q extends ParsedUrlQuery>(
     query: string,
     context: GetStaticPropsContext<Q>,
-    queryParams?: Q
+    params?: Q
   ): Promise<SanityProps<T, Q>> {
-    const params = queryParams ?? context.params ?? ({} as Q);
-    const data = await getClient(context.preview ?? false).fetch(query, params);
+    const rParams = params ?? context.params ?? ({} as Q);
+    const data = await getClient(context.preview ?? false).fetch(query, rParams);
     return {
       data,
       preview: context.preview ?? false,
-      params,
+      params: rParams,
     };
   }
 
   /**
    * Hook to return sanity data with preview, or not
    */
-  function useSanityQuery<T, P extends ParsedUrlQuery>(
+  function useSanityQuery<T, Q extends ParsedUrlQuery>(
     query: string,
-    props: SanityProps<T, P>
+    props: SanityProps<T, Q>,
   ): {
     data: T;
     loading: boolean;
