@@ -31,7 +31,7 @@ export interface NextSanity {
     query: string,
     context: GetStaticPropsContext<Q>,
   ) => Promise<SanityProps<T, Q>>;
-  useSanityData: <T, Q extends ParsedUrlQuery>(
+  useSanityQuery: <T, Q extends ParsedUrlQuery>(
     query: string,
     props: SanityProps<T, Q>
   ) => SanityPreview<T>;
@@ -74,7 +74,7 @@ export function setupNextSanity(config: ClientConfig): NextSanity {
   /**
   * Hook to return sanity data with preview, or not
   */
-  function useSanityData<T, P extends ParsedUrlQuery>(
+  function useSanityQuery<T, P extends ParsedUrlQuery>(
     query: string,
     props: SanityProps<T, P>
   ): {
@@ -93,6 +93,6 @@ export function setupNextSanity(config: ClientConfig): NextSanity {
     getClient,
     imageUrlBuilder,
     sanityStaticProps,
-    useSanityData,
+    useSanityQuery,
   };
 }

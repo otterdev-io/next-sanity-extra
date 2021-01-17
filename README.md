@@ -49,7 +49,7 @@ export const {
   getClient,
   imageUrlBuilder,
   sanityStaticProps,
-  useSanityData
+  useSanityQuery
  } = setupNextSanity(config);
 ```
 
@@ -57,7 +57,7 @@ export const {
 To use in a page, eg `pages/index.jsx`:
 
 ```tsx
-import { sanityStaticProps, useSanityData } from "../lib/sanity";
+import { sanityStaticProps, useSanityQuery } from "../lib/sanity";
 import groq from "next-sanity";
 
 const query = groq`*[ etc... ]`;
@@ -68,7 +68,7 @@ export const getStaticProps = async (context) => ({
   
 
 export default function ServicesPage(props) {
-  const { data, loading, error } = useSanityData(query, props);
+  const { data, loading, error } = useSanityQuery(query, props);
 
   // Render page with data
   <h1>{data.title}</h1>
@@ -78,7 +78,7 @@ export default function ServicesPage(props) {
 ### Typescript
 eg `pages/index.tsx`:
 ```tsx
-import { sanityStaticProps, useSanityData } from "../lib/sanity";
+import { sanityStaticProps, useSanityQuery } from "../lib/sanity";
 import groq from "next-sanity";
 import { GetStaticPropsContext } from "next";
 import { SanityProps } from "@otterdev/next-sanity-extra";
@@ -93,7 +93,7 @@ export const getStaticProps = async (context: GetStaticPropsContext) => ({
 // SanityProps<{title: string, etc...}>
 // Otherwise just use SanityProps
 export default function ServicesPage(props: SanityProps) {
-  const { data, loading, error } = useSanityData(query, props);
+  const { data, loading, error } = useSanityQuery(query, props);
 
   // Render page with data
   <h1>{data.title}</h1>
