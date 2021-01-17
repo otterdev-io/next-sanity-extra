@@ -63,7 +63,7 @@ import groq from "next-sanity";
 const query = groq`*[ etc... ]`;
 
 export const getStaticProps = async (context) => ({
-  props: await sanityStaticProps(query, context),
+  props: await sanityStaticProps(query, context)
 });
   
 
