@@ -24,12 +24,9 @@ export type SanityPreview<T> = {
 export interface NextSanity {
   getClient: (usePreview: boolean) => PicoSanity;
   imageUrlBuilder: ImageUrlBuilder;
-  sanityStaticProps: <
-    T,
-    Q extends ParsedUrlQuery
-  >(
+  sanityStaticProps: <T, Q extends ParsedUrlQuery>(
     query: string,
-    context: GetStaticPropsContext<Q>,
+    context: GetStaticPropsContext<Q>
   ) => Promise<SanityProps<T, Q>>;
   useSanityQuery: <T, Q extends ParsedUrlQuery>(
     query: string,
@@ -53,27 +50,23 @@ export function setupNextSanity(config: ClientConfig): NextSanity {
   /**
    * Helper for getStaticProps to return result from sanity query
    */
-  async function sanityStaticProps<
-    T extends any,
-    Q extends ParsedUrlQuery
-  >(
+  async function sanityStaticProps<T extends any, Q extends ParsedUrlQuery>(
     query: string,
     context: GetStaticPropsContext<Q>,
+    queryParams?: Q
   ): Promise<SanityProps<T, Q>> {
-    const data = await getClient(context.preview ?? false).fetch(
-      query,
-      context.params ?? {}
-    );
+    const params = queryParams ?? context.params ?? ({} as Q);
+    const data = await getClient(context.preview ?? false).fetch(query, params);
     return {
-        data,
-        preview: context.preview ?? false,
-        params: context.params ?? ({} as Q),
+      data,
+      preview: context.preview ?? false,
+      params,
     };
   }
 
   /**
-  * Hook to return sanity data with preview, or not
-  */
+   * Hook to return sanity data with preview, or not
+   */
   function useSanityQuery<T, P extends ParsedUrlQuery>(
     query: string,
     props: SanityProps<T, P>

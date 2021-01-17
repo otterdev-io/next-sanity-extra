@@ -13,10 +13,10 @@ Returns an object with functions you can use to ease integration:
 
 - `getClient(preview)` - A Sanity client that uses preview data or not
 - `imageUrlBuilder` - A ImageUrlBuilder
-- `sanityStaticProps(query, context, staticProps)` - Returns static props for getStaticProps.
+- `sanityStaticProps(query, context, queryParams)` - Returns static props for getStaticProps.
   - `query` - the query to run for the page.
   - `context` - the context passed into getStaticProps
-  - `staticProps` - [optional] extra settings to pass to getStaticProps. If it contains `props`, it will be merged with the sanity data.
+  - `queryParams` - [optional] params to substitute into the query. If not provided, will be taken from context.params. 
 - `useSanityPreview(query, props)` - A hook which returns preview-enabled data for use in each page.
   - `query` - the query to run for the page
   - `props` - props passed into the page component
