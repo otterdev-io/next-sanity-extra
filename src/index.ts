@@ -15,12 +15,6 @@ export type SanityProps<T = any, Q extends ParsedUrlQuery = ParsedUrlQuery> = {
   params: Q;
 };
 
-export type SanityStaticProps<
-  T = any,
-  P extends Record<string, unknown> = Record<string, unknown>,
-  Q extends ParsedUrlQuery = ParsedUrlQuery
-> = GetStaticPropsResult<SanityProps<T, Q> & P>;
-
 export type SanityPreview<T> = {
   data: T;
   loading: boolean;
@@ -32,14 +26,12 @@ export interface NextSanity {
   imageUrlBuilder: ImageUrlBuilder;
   sanityStaticProps: <
     T,
-    P extends Record<string, unknown>,
     Q extends ParsedUrlQuery
   >(
     query: string,
     context: GetStaticPropsContext<Q>,
-    staticProps?: GetStaticPropsResult<P>
-  ) => Promise<SanityStaticProps<T, P, Q>>;
-  useSanityPreview: <T, Q extends ParsedUrlQuery>(
+  ) => Promise<SanityProps<T, Q>>;
+  useSanityData: <T, Q extends ParsedUrlQuery>(
     query: string,
     props: SanityProps<T, Q>
   ) => SanityPreview<T>;
@@ -58,34 +50,31 @@ export function setupNextSanity(config: ClientConfig): NextSanity {
   const imageUrlBuilder = createImageUrlBuilder(config);
   const usePreviewSubscription = createPreviewSubscriptionHook(config);
 
-  //Helper for getStaticProps to merge in all the data needed for previews
+  /**
+   * Helper for getStaticProps to return result from sanity query
+   */
   async function sanityStaticProps<
-    T,
-    P extends Record<string, unknown>,
+    T extends any,
     Q extends ParsedUrlQuery
   >(
     query: string,
     context: GetStaticPropsContext<Q>,
-    staticProps?: GetStaticPropsResult<P>
-  ): Promise<SanityStaticProps<T, P, Q>> {
+  ): Promise<SanityProps<T, Q>> {
     const data = await getClient(context.preview ?? false).fetch(
       query,
       context.params ?? {}
     );
-    const { props, ...rest } = (staticProps as any) ?? {};
     return {
-      ...rest,
-      props: {
         data,
         preview: context.preview ?? false,
         params: context.params ?? ({} as Q),
-        ...(props ?? ({} as P)),
-      },
     };
   }
 
-  //Hook to return preview result from sanity
-  function useSanityPreview<T, P extends ParsedUrlQuery>(
+  /**
+  * Hook to return sanity data with preview, or not
+  */
+  function useSanityData<T, P extends ParsedUrlQuery>(
     query: string,
     props: SanityProps<T, P>
   ): {
@@ -104,6 +93,6 @@ export function setupNextSanity(config: ClientConfig): NextSanity {
     getClient,
     imageUrlBuilder,
     sanityStaticProps,
-    useSanityPreview,
+    useSanityData,
   };
 }

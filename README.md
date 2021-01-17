@@ -49,26 +49,26 @@ export const {
   getClient,
   imageUrlBuilder,
   sanityStaticProps,
-  useSanityPreview
+  useSanityData
  } = setupNextSanity(config);
 ```
 
 ## Usage
-To use in a page, 
+To use in a page, eg `pages/index.jsx`:
 
-### Javascript
-eg `pages/index.jsx`:
 ```tsx
-import { sanityStaticProps, useSanityPreview } from "../lib/sanity";
-import groq from "groq";
+import { sanityStaticProps, useSanityData } from "../lib/sanity";
+import groq from "next-sanity";
 
 const query = groq`*[ etc... ]`;
 
-export const getStaticProps = (context) =>
-  sanityStaticProps(query, context, { revalidate: 60 });
+export const getStaticProps = async (context) => ({
+  props: await sanityStaticProps(query, context),
+});
+  
 
 export default function ServicesPage(props) {
-  const { data, loading, error } = useSanityPreview(query, props);
+  const { data, loading, error } = useSanityData(query, props);
 
   // Render page with data
   <h1>{data.title}</h1>
@@ -78,21 +78,22 @@ export default function ServicesPage(props) {
 ### Typescript
 eg `pages/index.tsx`:
 ```tsx
-import { sanityStaticProps, useSanityPreview } from "../lib/sanity";
-import groq from "groq";
+import { sanityStaticProps, useSanityData } from "../lib/sanity";
+import groq from "next-sanity";
 import { GetStaticPropsContext } from "next";
 import { SanityProps } from "@otterdev/next-sanity-extra";
 
 const query = groq`*[ etc... ]`;
 
-export const getStaticProps = async (context: GetStaticPropsContext) =>
-  sanityStaticProps(query, context, { revalidate: 60 });
+export const getStaticProps = async (context: GetStaticPropsContext) => ({
+  props: sanityStaticProps(query, context)
+})
 
 // Optionally type your page's data: 
 // SanityProps<{title: string, etc...}>
 // Otherwise just use SanityProps
 export default function ServicesPage(props: SanityProps) {
-  const { data, loading, error } = useSanityPreview(query, props);
+  const { data, loading, error } = useSanityData(query, props);
 
   // Render page with data
   <h1>{data.title}</h1>
