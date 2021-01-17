@@ -1,6 +1,6 @@
 {
   "name": "@otterdev/next-sanity-extra",
-  "version": "0.1.9",
+  "version": "0.1.10",
   "description": "A module to make integration between next js and sanity, with live preview, easier",
   "main": "index.js",
   "types": "index.d.ts",
@@ -23,10 +23,10 @@
     "typescript": "^4.1.3"
   },
   "dependencies": {
-    "next": "^10.0.5",
     "next-sanity": "^0.1.8"
   },
   "peerDependencies": {
+    "next": "^10.0.5",
     "react": "^17.0.0",
     "react-dom": "^17.0.0"
   }
