@@ -7,12 +7,13 @@ It gives you simple functions for setting up sanity, fetching static props, and 
 ```js
 import { setupNextSanity } from "@otterdev/next-sanity-extra"
 ```
-`setupNextSanity(client: ClientConfig)` 
+`setupNextSanity(client: ClientConfig, serializers?: PortableTextSerializers)` 
 
 Returns an object with functions you can use to ease integration:
 
 - `getClient(preview)` - A Sanity client that uses preview data or not
 - `imageUrlBuilder` - A ImageUrlBuilder
+- `PortableText` - Portable Text component
 - `sanityStaticProps(query, context, queryParams)` - Returns static props for getStaticProps.
   - `query` - the query to run for the page.
   - `context` - the context passed into getStaticProps
@@ -48,6 +49,7 @@ const config = {
 export const {
   getClient,
   imageUrlBuilder,
+  PortableText,
   sanityStaticProps,
   useSanityQuery
  } = setupNextSanity(config);
@@ -57,7 +59,7 @@ export const {
 To use in a page, eg `pages/index.jsx`:
 
 ```tsx
-import { sanityStaticProps, useSanityQuery } from "../lib/sanity";
+import { sanityStaticProps, useSanityQuery, PortableText } from "../lib/sanity";
 import groq from "next-sanity";
 
 const query = groq`*[ etc... ]`;
@@ -72,13 +74,14 @@ export default function ServicesPage(props) {
 
   // Render page with data
   <h1>{data.title}</h1>
+  <PortableText blocks={data.content} />
 }
 ```
 
 ### Typescript
 eg `pages/index.tsx`:
 ```tsx
-import { sanityStaticProps, useSanityQuery } from "../lib/sanity";
+import { sanityStaticProps, useSanityQuery, PortableText } from "../lib/sanity";
 import groq from "next-sanity";
 import { GetStaticPropsContext } from "next";
 import { SanityProps } from "@otterdev/next-sanity-extra";
@@ -97,6 +100,7 @@ export default function ServicesPage(props: SanityProps) {
 
   // Render page with data
   <h1>{data.title}</h1>
+  <PortableText blocks={data.content} />
 }
 ```
 

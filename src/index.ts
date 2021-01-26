@@ -3,11 +3,13 @@ import {
   createPreviewSubscriptionHook,
   createImageUrlBuilder,
   ClientConfig,
+  createPortableTextComponent,
 } from "next-sanity";
 import { PicoSanity } from "picosanity";
 import { ImageUrlBuilder } from "@sanity/image-url/lib/types/builder";
 import { GetStaticPropsContext, GetStaticPropsResult } from "next";
 import { ParsedUrlQuery } from "querystring";
+import { PortableTextProps, PortableTextSerializers } from "@sanity/block-content-to-react";
 
 export type SanityProps<T = any, Q extends ParsedUrlQuery = ParsedUrlQuery> = {
   data: T;
@@ -24,6 +26,7 @@ export type SanityPreview<T> = {
 export interface NextSanity {
   getClient: (usePreview: boolean) => PicoSanity;
   imageUrlBuilder: ImageUrlBuilder;
+  PortableText: (props: PortableTextProps) => JSX.Element
   sanityStaticProps: <T, Q extends ParsedUrlQuery>(
     query: string,
     context: GetStaticPropsContext<Q>,
@@ -38,7 +41,7 @@ export interface NextSanity {
 /**
  * Create sanity client and hooks for integrating next with sanity
  */
-export function setupNextSanity(config: ClientConfig): NextSanity {
+export function setupNextSanity(config: ClientConfig, serializers?: PortableTextSerializers): NextSanity {
   const sanityClient = createClient(config);
   const previewClient = createClient({ ...config, useCdn: false });
 
@@ -47,6 +50,7 @@ export function setupNextSanity(config: ClientConfig): NextSanity {
 
   const imageUrlBuilder = createImageUrlBuilder(config);
   const usePreviewSubscription = createPreviewSubscriptionHook(config);
+  const PortableText = createPortableTextComponent({...config, serializers})
 
   /**
    * Helper for getStaticProps to return result from sanity query
@@ -86,6 +90,7 @@ export function setupNextSanity(config: ClientConfig): NextSanity {
   return {
     getClient,
     imageUrlBuilder,
+    PortableText,
     sanityStaticProps,
     useSanityQuery,
   };
