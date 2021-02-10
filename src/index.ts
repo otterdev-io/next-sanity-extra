@@ -9,7 +9,10 @@ import { PicoSanity } from "picosanity";
 import { ImageUrlBuilder } from "@sanity/image-url/lib/types/builder";
 import { GetStaticPropsContext, GetStaticPropsResult } from "next";
 import { ParsedUrlQuery } from "querystring";
-import { PortableTextProps, PortableTextSerializers } from "@sanity/block-content-to-react";
+import {
+  PortableTextProps,
+  PortableTextSerializers,
+} from "@sanity/block-content-to-react";
 
 export type SanityProps<T = any, Q extends ParsedUrlQuery = ParsedUrlQuery> = {
   data: T;
@@ -26,11 +29,11 @@ export type SanityPreview<T> = {
 export interface NextSanity {
   getClient: (usePreview: boolean) => PicoSanity;
   imageUrlBuilder: ImageUrlBuilder;
-  PortableText: (props: PortableTextProps) => JSX.Element
+  PortableText: (props: PortableTextProps) => JSX.Element;
   sanityStaticProps: <T, Q extends ParsedUrlQuery>(
     query: string,
     context: GetStaticPropsContext<Q>,
-    params?: Q 
+    params?: Q
   ) => Promise<SanityProps<T, Q>>;
   useSanityQuery: <T, Q extends ParsedUrlQuery>(
     query: string,
@@ -41,8 +44,11 @@ export interface NextSanity {
 /**
  * Create sanity client and hooks for integrating next with sanity
  */
-export function setupNextSanity(config: ClientConfig, serializers?: PortableTextSerializers): NextSanity {
-  const sanityClient = createClient(config);
+export function setupNextSanity(
+  config: ClientConfig,
+  serializers?: PortableTextSerializers
+): NextSanity {
+  const sanityClient = createClient({ ...config, token: undefined });
   const previewClient = createClient({ ...config, useCdn: false });
 
   const getClient = (usePreview: boolean) =>
@@ -50,7 +56,7 @@ export function setupNextSanity(config: ClientConfig, serializers?: PortableText
 
   const imageUrlBuilder = createImageUrlBuilder(config);
   const usePreviewSubscription = createPreviewSubscriptionHook(config);
-  const PortableText = createPortableTextComponent({...config, serializers})
+  const PortableText = createPortableTextComponent({ ...config, serializers });
 
   /**
    * Helper for getStaticProps to return result from sanity query
@@ -61,7 +67,10 @@ export function setupNextSanity(config: ClientConfig, serializers?: PortableText
     params?: Q
   ): Promise<SanityProps<T, Q>> {
     const rParams = params ?? context.params ?? ({} as Q);
-    const data = await getClient(context.preview ?? false).fetch(query, rParams);
+    const data = await getClient(context.preview ?? false).fetch(
+      query,
+      rParams
+    );
     return {
       data,
       preview: context.preview ?? false,
@@ -74,7 +83,7 @@ export function setupNextSanity(config: ClientConfig, serializers?: PortableText
    */
   function useSanityQuery<T, Q extends ParsedUrlQuery>(
     query: string,
-    props: SanityProps<T, Q>,
+    props: SanityProps<T, Q>
   ): {
     data: T;
     loading: boolean;

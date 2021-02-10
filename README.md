@@ -39,6 +39,7 @@ import { setupNextSanity } from "@otterdev/next-sanity-extra"
 
 // Standard sanity config
 // Don't forget token for live previews
+// Token isnt sent for non-preview requests, so they will be non-authenticated
 const config = {
   projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,
   dataset: process.env.NEXT_PUBLIC_SANITY_DATASET,
