@@ -11,13 +11,14 @@ import { setupNextSanity } from "@otterdev/next-sanity-extra"
 
 Returns an object with functions you can use to ease integration:
 
-- `getClient(preview)` - A Sanity client that uses preview data or not
+- `sanityClient('anonymous' | 'authenticated' | 'preview')` - A sanity client with a given setup. Token must be set in order to use authenticated or preview
 - `imageUrlBuilder` - A ImageUrlBuilder
 - `PortableText` - Portable Text component
-- `sanityStaticProps(query, context, queryParams)` - Returns static props for getStaticProps.
-  - `query` - the query to run for the page.
+- `sanityStaticProps({context, query, queryParams, authenticated})` - Returns static props for getStaticProps.
   - `context` - the context passed into getStaticProps
+  - `query` - the query to run for the page.
   - `queryParams` - [optional] params to substitute into the query. If not provided, will be taken from context.params. 
+  - `authenticated` - [optional] whether to use an authenticated sanity client, if you have provided token to config. Defaults to false.
 - `useSanityPreview(query, props)` - A hook which returns preview-enabled data for use in each page.
   - `query` - the query to run for the page
   - `props` - props passed into the page component
@@ -38,8 +39,7 @@ First to setup the functions, create a module, eg `lib/sanity.js`. Call `setupNe
 import { setupNextSanity } from "@otterdev/next-sanity-extra"
 
 // Standard sanity config
-// Don't forget token for live previews
-// Token isnt sent for non-preview requests, so they will be non-authenticated
+// Don't forget token, to get a preview client and authenticated client
 const config = {
   projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,
   dataset: process.env.NEXT_PUBLIC_SANITY_DATASET,
@@ -48,7 +48,7 @@ const config = {
 };
 
 export const {
-  getClient,
+  sanityClient,
   imageUrlBuilder,
   PortableText,
   sanityStaticProps,
@@ -63,10 +63,10 @@ To use in a page, eg `pages/index.jsx`:
 import { sanityStaticProps, useSanityQuery, PortableText } from "../lib/sanity";
 import groq from "next-sanity";
 
-const query = groq`*[ etc... ]`;
+const myQuery = groq`*[ etc... ]`;
 
 export const getStaticProps = async (context) => ({
-  props: await sanityStaticProps(query, context)
+  props: await sanityStaticProps({context, query: myQuery})
 });
   
 
@@ -87,10 +87,10 @@ import groq from "next-sanity";
 import { GetStaticPropsContext } from "next";
 import { SanityProps } from "@otterdev/next-sanity-extra";
 
-const query = groq`*[ etc... ]`;
+const myQuery = groq`*[ etc... ]`;
 
 export const getStaticProps = async (context: GetStaticPropsContext) => ({
-  props: sanityStaticProps(query, context)
+  props: sanityStaticProps({context, query: myQuery})
 })
 
 // Optionally type your page's data: 
