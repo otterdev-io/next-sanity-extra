@@ -6,7 +6,8 @@
   "types": "index.d.ts",
   "scripts": {
     "build": "tsc",
-    "realpublish": "npm run build && cp package.json dist && cp README.md dist && cd dist && npm publish"
+    "postbuild": "cp package.json dist && cp README.md dist",
+    "release": "npm run build && cd dist && npm publish"
   },
   "keywords": [
     "next",
