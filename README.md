@@ -1,11 +1,12 @@
 # next-sanity-extra
 This package aims to simplify integrating Next.js, and the Sanity.io CMS.
 It gives you simple functions for setting up sanity, fetching static props, and using live previews as per  https://www.sanity.io/blog/live-preview-with-nextjs
+Checkout out the sanity starter template at https://github.com/otterdev-io/sanity-template-nextjs-vercel-extra to see an example of usage.
 
 ## Functions
 
 ```js
-import { setupNextSanity } from "@otterdev/next-sanity-extra"
+import { setupNextSanity } from "next-sanity-extra"
 ```
 `setupNextSanity(client: ClientConfig, serializers?: PortableTextSerializers)` 
 
@@ -25,7 +26,7 @@ Returns an object with functions you can use to ease integration:
 
 ### API Funcions
 ```js
-import previewApi from "@otterdev/next-sanity-extra/api/preview"
+import previewApi from "next-sanity-extra/api/preview"
 ```
 `previewApi({token, data, redirect})` - API handler to call from sanity for page previews:
   - `token` - Sanity API Token
@@ -36,7 +37,7 @@ import previewApi from "@otterdev/next-sanity-extra/api/preview"
 First to setup the functions, create a module, eg `lib/sanity.js`. Call `setupNextSanity(config)` to get the helper functions:
 
 ```js
-import { setupNextSanity } from "@otterdev/next-sanity-extra"
+import { setupNextSanity } from "next-sanity-extra"
 
 // Standard sanity config
 // Don't forget token, to get a preview client and authenticated client
@@ -85,11 +86,11 @@ eg `pages/index.tsx`:
 import { sanityStaticProps, useSanityQuery, PortableText } from "../lib/sanity";
 import groq from "next-sanity";
 import { GetStaticPropsContext } from "next";
-import { SanityProps } from "@otterdev/next-sanity-extra";
+import { SanityProps } from "next-sanity-extra";
 
 const myQuery = groq`*[ etc... ]`;
 
-export const getStaticProps = async (context: GetStaticPropsContext) => ({
+export const getStaticProps: GetStaticProps = async (context) => ({
   props: sanityStaticProps({context, query: myQuery})
 })
 
@@ -111,14 +112,14 @@ To serve live previews, create eg `pages/api/preview.js`.
 With the default settings - forwarding to /[slug]:
 
 ```js
-import previewApi from '@otterdev/next-sanity-extra/api/preview'
+import previewApi from 'next-sanity-extra/api/preview'
 
 export default previewApi({token: process.env.SANITY_PREVIEW_TOKEN}) 
 ```
 
 to forward to custom parameter - eg 'page'
 ```js
-import previewApi from '@otterdev/next-sanity-extra/api/preview'
+import previewApi from 'next-sanity-extra/api/preview'
 
 export default previewApi({
   token: process.env.SANITY_PREVIEW_TOKEN,
