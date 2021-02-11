@@ -1,6 +1,6 @@
 {
   "name": "next-sanity-extra",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "A module to make integration between next js and sanity, with live preview, easier",
   "main": "index.js",
   "types": "index.d.ts",
